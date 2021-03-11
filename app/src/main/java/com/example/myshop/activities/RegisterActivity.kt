@@ -37,7 +37,7 @@ class RegisterActivity : BaseActivity() {
 
         setUpActionBar()
         btn_register.setOnClickListener {
-            validateRegisterDetails()
+            registerUser()
 
         }
     }
@@ -56,6 +56,7 @@ class RegisterActivity : BaseActivity() {
 
 
     private fun validateRegisterDetails(): Boolean {
+
         return when {
             TextUtils.isEmpty(et_first_name.text.toString().trim { it <= ' ' }) -> {
                 showErrorSnackBar(resources.getString(R.string.err_msg_enter_first_name), true)
@@ -85,7 +86,8 @@ class RegisterActivity : BaseActivity() {
                 false
             }
 
-            et_register_password.text.toString().trim { it <= ' ' } != et_register_confirm_password.text.toString()
+            et_register_password.text.toString()
+                .trim { it <= ' ' } != et_register_confirm_password.text.toString()
                 .trim { it <= ' ' } -> {
                 showErrorSnackBar(
                     resources.getString(R.string.err_msg_password_and_confirm_password_mismatch),
@@ -101,38 +103,41 @@ class RegisterActivity : BaseActivity() {
                 false
             }
             else -> {
-
-                email = et_register_email.text.toString().trim { it <= ' ' }
-                password = et_register_password.text.toString().trim { it <= ' ' }
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val firebaseUser = task.result!!.user
-                            Log.d("pass", firebaseUser.toString())
-                            Toast.makeText(
-                                this,
-                                "Successfully registered $firebaseUser",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            startActivity(
-                                Intent(this, MainActivity::class.java).putExtra(
-                                    "user_id",
-                                    firebaseUser.uid
-                                ).putExtra("email_id", email)
-                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                            )
-                            finish()
-                        } else{
-                            Snackbar.make(
-                                findViewById(android.R.id.content),
-                                task.exception?.message.toString(),
-                                Snackbar.LENGTH_LONG
-                            ).show()
-                        }
-                    }
-
                 true
             }
+        }
+    }
+
+    private fun registerUser() {
+        if (validateRegisterDetails()) {
+            email = et_register_email.text.toString().trim { it <= ' ' }
+            password = et_register_password.text.toString().trim { it <= ' ' }
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val firebaseUser = task.result!!.user
+                        Log.d("pass", firebaseUser.toString())
+                        Toast.makeText(
+                            this,
+                            "Successfully registered $firebaseUser",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        startActivity(
+                            Intent(this, MainActivity::class.java).putExtra(
+                                "user_id",
+                                firebaseUser.uid
+                            ).putExtra("email_id", email)
+                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        )
+                        finish()
+                    } else {
+                        Snackbar.make(
+                            findViewById(android.R.id.content),
+                            task.exception?.message.toString(),
+                            Snackbar.LENGTH_LONG
+                        ).show()
+                    }
+                }
         }
     }
 
