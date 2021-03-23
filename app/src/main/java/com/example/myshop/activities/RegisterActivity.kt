@@ -10,13 +10,17 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
 import com.example.myshop.R
+import com.example.myshop.firestore.FirestoreClass
+import com.example.myshop.model.User
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : BaseActivity() {
     private var email = ""
     private var password = ""
+    private lateinit var firebaseUser : FirebaseUser
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -31,8 +35,7 @@ class RegisterActivity : BaseActivity() {
             )
         }
         tv_login.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            onBackPressed()
         }
 
         setUpActionBar()
@@ -110,27 +113,24 @@ class RegisterActivity : BaseActivity() {
 
     private fun registerUser() {
         if (validateRegisterDetails()) {
+            showProgressDialog(resources.getString(R.string.please_wait))
             email = et_register_email.text.toString().trim { it <= ' ' }
             password = et_register_password.text.toString().trim { it <= ' ' }
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        val firebaseUser = task.result!!.user
-                        Log.d("pass", firebaseUser.toString())
-                        Toast.makeText(
-                            this,
-                            "Successfully registered $firebaseUser",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        startActivity(
-                            Intent(this, MainActivity::class.java).putExtra(
-                                "user_id",
-                                firebaseUser.uid
-                            ).putExtra("email_id", email)
-                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        firebaseUser = task.result!!.user
+                        val user = User(
+                            firebaseUser.uid,
+                            et_first_name.text.toString().trim(),
+                            et_last_name.text.toString().trim(),
+                            email
                         )
-                        finish()
+
+                        FirestoreClass().registerUser(this@RegisterActivity,user)
+
                     } else {
+                        hideProgressDialog()
                         Snackbar.make(
                             findViewById(android.R.id.content),
                             task.exception?.message.toString(),
@@ -139,6 +139,20 @@ class RegisterActivity : BaseActivity() {
                     }
                 }
         }
+    }
+
+    fun userRegistrationSuccess(){
+        hideProgressDialog()
+
+        Toast.makeText(this,resources.getString(R.string.register_success),Toast.LENGTH_SHORT).show()
+        startActivity(
+            Intent(this, MainActivity::class.java).putExtra(
+                "user_id",
+                firebaseUser.uid
+            ).putExtra("email_id", email)
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+        )
+        finish()
     }
 
 

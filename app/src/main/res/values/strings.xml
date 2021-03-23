@@ -55,4 +55,20 @@
 
     <string name="err_msg_agree_terms_and_condition">Please agree terms and condition.</string>
     <string name="please_wait">Please Wait…</string>
+
+    <string name="title_forgot_password">FORGOT PASSWORD?</string>
+
+    <string name="forgot_password_title_description">Enter your username and e-mail address we\'ll send you a email to reset your password</string>
+
+    <string name="btn_lbl_submit">Submit</string>
+    <string name="register_success">You are registered successfully.</string>
+    <string name="title_complete_profile">PROFILE</string>
+
+    <string name="et_hint_mobile_number">Mobile Number</string>
+
+    <string name="rb_lbl_male">MALE</string>
+
+    <string name="rb_lbl_female">FEMALE</string>
+
+    <string name="btn_lbl_save">Save</string>
 </resources>

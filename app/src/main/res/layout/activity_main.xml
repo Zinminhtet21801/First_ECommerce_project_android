@@ -9,22 +9,14 @@
     tools:context=".activities.MainActivity">
 
     
-    <com.example.myshop.util.MSPTextViewRegular
-        android:id="@+id/tv_user_id"
+    <com.example.myshop.util.MSTextViewRegular
+        android:id="@+id/tv_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="This normal TextView one."
         android:textColor="@android:color/black"
         android:textSize="16sp" />
 
-    <com.example.myshop.BoldTextView
-        android:id="@+id/tv_email_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="This bold TextView one."
-        android:textColor="@android:color/black"
-        android:textSize="16sp" />
 
     <Button
         android:id="@+id/btn_log_out"

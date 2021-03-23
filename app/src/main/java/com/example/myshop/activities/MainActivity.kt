@@ -1,9 +1,11 @@
 package com.example.myshop.activities
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.myshop.R
+import com.example.myshop.util.Constants
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -13,8 +15,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tv_user_id.text = intent.getStringExtra("user_id")
-        tv_email_id.text = intent.getStringExtra("email_id")
+        val sharedPreferences =
+            getSharedPreferences(Constants.MYSHOP_PREFERENCES, Context.MODE_PRIVATE)
+        val username = sharedPreferences.getString(Constants.LOGGED_IN_USERNAME,"")
+        tv_main.text = "Hello $username."
         btn_log_out.setOnClickListener {
             firebaseAuth.signOut()
             startActivity(
