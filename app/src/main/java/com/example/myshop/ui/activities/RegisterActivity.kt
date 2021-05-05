@@ -1,11 +1,9 @@
-package com.example.myshop.activities
+package com.example.myshop.ui.activities
 
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Toast
@@ -146,7 +144,7 @@ class RegisterActivity : BaseActivity() {
 
         Toast.makeText(this,resources.getString(R.string.register_success),Toast.LENGTH_SHORT).show()
         startActivity(
-            Intent(this, MainActivity::class.java).putExtra(
+            Intent(this, DashboardActivity::class.java).putExtra(
                 "user_id",
                 firebaseUser.uid
             ).putExtra("email_id", email)

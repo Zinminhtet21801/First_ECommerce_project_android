@@ -1,4 +1,4 @@
-package com.example.myshop.activities
+package com.example.myshop.ui.activities
 
 import android.content.Intent
 import android.os.Build
@@ -27,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
 
         Handler(Looper.getMainLooper()).postDelayed(
             {
-                startActivity(Intent(this, LoginActivity::class.java))
+                startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
 
             },
